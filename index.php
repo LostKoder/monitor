@@ -36,9 +36,6 @@ try {
     $response = $client->request($method, $url, [
       'proxy' => 'socks5://127.0.0.1:9050',
       'connect_timeout' => 5,
-      'curl' => [
-        CURLOPT_SSLVERSION => 4,
-      ]
     ]);
     $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start));
 } catch (RequestException $e) {
