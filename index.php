@@ -40,10 +40,7 @@ try {
     $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start));
 } catch (RequestException $e) {
     $logger->debug("TOR request timeout ",['message' => $e->getMessage()]);
-    $logger->debug("Requesting $url without proxy");
-    $start = microtime(true);
-    $response = $client->request($method, $url);
-    $logger->debug(sprintf("Request completed without proxy in '%s' seconds", microtime(true) - $start));
+    throw $e;
 }
 
 // send content
