@@ -36,6 +36,11 @@ try {
     $response = $client->request($method, $url, [
       'proxy' => 'socks5://127.0.0.1:9050',
       'connect_timeout' => 5,
+      'curl' => [
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSLVERSION => 3,
+      ]
     ]);
     $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start));
 } catch (RequestException $e) {
@@ -46,15 +51,14 @@ try {
     $logger->debug(sprintf("Request completed without proxy in '%s' seconds", microtime(true) - $start));
 }
 
-$isXmlHttpRequest = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 // send content
-//if ($isXmlHttpRequest && isset($_GET['amazon_api_type']) && $_GET['amazon_api_type'] === 'json') {
+if (isset($_GET['amazon_api_type']) && $_GET['amazon_api_type'] === 'json') {
     // set headers
     header('content-type:application/json');
     header('access-control-allow-origin:*');
     header('cf-ray:3db09a8eed929be7-AMS');
     header('vary:Accept-Encoding');
     echo json_encode(['response' => $response->getBody()->getContents()]);
-//}
+}
 
 
