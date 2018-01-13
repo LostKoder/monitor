@@ -30,9 +30,7 @@ $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 
 // make request to the amazon
 $url = 'https://www.amazon.com'.$uri;
-$tries = 0;
 try {
-    begin:
     $logger->debug("Requesting $url by TOR");
     $start = microtime(true);
     $response = $client->request($method, $url, [
@@ -41,17 +39,8 @@ try {
     ]);
     $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start));
 } catch (RequestException $e) {
-    $tries++;
     $logger->debug("TOR request timeout ",['message' => $e->getMessage()]);
-    if ($tries > 2) {
-        $logger->debug("Terminating Tor Request tries=$tries",['message' => $e->getMessage()]);
-        throw $e;
-    }
-
-    $logger->debug("Restarting TOR service",['message' => $e->getMessage()]);
-    // restart tor service to get new ip
-    `/usr/bin/sudo /usr/sbin/service tor restart`;
-    goto begin;
+    throw $e;
 }
 
 // send content
