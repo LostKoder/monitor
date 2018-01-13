@@ -43,7 +43,7 @@ try {
 } catch (RequestException $e) {
     $tries++;
     $logger->debug("TOR request timeout ",['message' => $e->getMessage()]);
-    if ($tries > 1) {
+    if ($tries > 2) {
         $logger->debug("Terminating Tor Request tries=$tries",['message' => $e->getMessage()]);
         throw $e;
     }
