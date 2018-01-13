@@ -39,7 +39,7 @@ try {
       'curl' => [
         CURLOPT_SSL_VERIFYHOST => false,
         CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_SSLVERSION => 3,
+        CURLOPT_SSLVERSION => 4,
       ]
     ]);
     $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start));
