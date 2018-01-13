@@ -1,7 +1,13 @@
 <?php
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Exception\RequestException;
+
 require_once __DIR__.'/vendor/autoload.php';
-$cookie = new \GuzzleHttp\Cookie\CookieJar();
-$client = new \GuzzleHttp\Client([
+
+$cookie = new CookieJar();
+$client = new Client([
   'headers' => [
     'Connection' => 'keep-alive',
     'Cache-Control' => 'max-age=0',
@@ -12,19 +18,30 @@ $client = new \GuzzleHttp\Client([
     'Accept-Encoding' => 'gzip, deflate, br',
     'Accept-Language' => 'en-US,en;q=0.8',
   ],
-//  'decode_content' => false,
   'cookies' => $cookie,
-  'proxy' => 'socks5://127.0.0.1:9050'
 ]);
 
+// prepare parameters
 $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'get';
 $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+
+// make request to the amazon
 $url = 'https://www.amazon.com/'.$uri;
-$response = $client->request($method, $url);
-//header('Content-Encoding: gzip');
+try {
+    $response = $client->request($method, $url, [
+      'proxy' => 'socks5://127.0.0.1:9050',
+      'timeout' => 3.14,
+    ]);
+} catch (RequestException $e) {
+    $response = $client->request($method, $url);
+}
+
+// set headers
 header('content-type:application/json');
 header('access-control-allow-origin:*');
 header('cf-ray:3db09a8eed929be7-AMS');
 header('vary:Accept-Encoding');
+
+// send content
 echo json_encode(['response' => $response->getBody()->getContents()]);
 
