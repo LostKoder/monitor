@@ -2,13 +2,9 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Exception\RequestException;
-use Monolog\Logger;
 
 require_once __DIR__.'/vendor/autoload.php';
 
-$logger = new Logger('main');
-$logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__.'/monitor.log'));
 $cookie = new CookieJar();
 $client = new Client([
   'headers' => [
@@ -30,31 +26,14 @@ $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 
 // make request to the amazon
 $url = 'https://www.amazon.com'.$uri;
-try {
-    $logger->debug("Requesting $url by TOR");
-    $start = microtime(true);
-    $response = $client->request($method, $url, [
-      'proxy' => 'socks5://127.0.0.1:9050',
-      'timeout' => 5,
-    ]);
-    $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start));
-} catch (RequestException $e) {
-    $logger->debug("TOR request timeout ",['message' => $e->getMessage()]);
-    $logger->debug("Requesting $url without proxy");
-    $start = microtime(true);
-    $response = $client->request($method, $url);
-    $logger->debug(sprintf("Request completed without proxy in '%s' seconds", microtime(true) - $start));
-}
+$response = $client->request($method, $url);
 
-$isXmlHttpRequest = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+// set headers
+header('access-control-allow-origin:*');
+header('cf-ray:3db09a8eed929be7-AMS');
+header('vary:Accept-Encoding');
+
 // send content
-//if ($isXmlHttpRequest && isset($_GET['amazon_api_type']) && $_GET['amazon_api_type'] === 'json') {
-    // set headers
-    header('content-type:application/json');
-    header('access-control-allow-origin:*');
-    header('cf-ray:3db09a8eed929be7-AMS');
-    header('vary:Accept-Encoding');
-    echo json_encode(['response' => $response->getBody()->getContents()]);
-//}
+echo $response->getBody()->getContents();
 
 
