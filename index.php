@@ -44,8 +44,11 @@ try {
     $tries++;
     $logger->debug("TOR request timeout ",['message' => $e->getMessage()]);
     if ($tries > 1) {
+        $logger->debug("Terminating Tor Request tries=$tries",['message' => $e->getMessage()]);
         throw $e;
     }
+
+    $logger->debug("Restarting TOR service",['message' => $e->getMessage()]);
     // restart tor service to get new ip
     `/usr/bin/sudo /usr/sbin/service tor restart`;
     goto begin;
