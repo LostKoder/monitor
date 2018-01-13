@@ -36,16 +36,15 @@ try {
     $response = $client->request($method, $url);
 }
 
-
+$isXmlHttpRequest = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 // send content
-if (isset($_GET['amazon_api_type']) && $_GET['amazon_api_type'] === 'json') {
+if ($isXmlHttpRequest && isset($_GET['amazon_api_type']) && $_GET['amazon_api_type'] === 'json') {
     // set headers
     header('content-type:application/json');
     header('access-control-allow-origin:*');
     header('cf-ray:3db09a8eed929be7-AMS');
     header('vary:Accept-Encoding');
     echo json_encode(['response' => $response->getBody()->getContents()]);
-} else {
-    echo $response->getBody()->getContents();
 }
+
 
