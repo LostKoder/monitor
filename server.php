@@ -23,6 +23,7 @@ $client = new Client([
 // prepare parameters
 $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'get';
 $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+$uri = str_replace('/server.php', '', $uri);
 
 // make request to the amazon
 $url = 'https://www.amazon.com'.$uri;
