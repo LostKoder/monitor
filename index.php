@@ -36,14 +36,14 @@ try {
     $response = $client->request($method, $url);
 }
 
-// set headers
-header('content-type:application/json');
-header('access-control-allow-origin:*');
-header('cf-ray:3db09a8eed929be7-AMS');
-header('vary:Accept-Encoding');
 
 // send content
 if (isset($_GET['amazon_api_type']) && $_GET['amazon_api_type'] === 'json') {
+    // set headers
+    header('content-type:application/json');
+    header('access-control-allow-origin:*');
+    header('cf-ray:3db09a8eed929be7-AMS');
+    header('vary:Accept-Encoding');
     echo json_encode(['response' => $response->getBody()->getContents()]);
 } else {
     echo $response->getBody()->getContents();
