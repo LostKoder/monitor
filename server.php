@@ -29,7 +29,7 @@ $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'get'
 $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 
 // make request to the amazon
-$url = 'https://www.amazon.com/'.$uri;
+$url = 'https://www.amazon.com'.$uri;
 try {
     $logger->debug("Requesting $url by TOR");
     $start = microtime(true);
