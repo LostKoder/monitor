@@ -30,7 +30,7 @@ $url = 'https://www.amazon.com/'.$uri;
 try {
     $response = $client->request($method, $url, [
       'proxy' => 'socks5://127.0.0.1:9050',
-      'timeout' => 3.14,
+      'timeout' => 4,
     ]);
 } catch (RequestException $e) {
     $response = $client->request($method, $url);
@@ -43,5 +43,9 @@ header('cf-ray:3db09a8eed929be7-AMS');
 header('vary:Accept-Encoding');
 
 // send content
-echo json_encode(['response' => $response->getBody()->getContents()]);
+if (isset($_GET['amazon_api_type']) && $_GET['amazon_api_type'] === 'json') {
+    echo json_encode(['response' => $response->getBody()->getContents()]);
+} else {
+    echo $response->getBody()->getContents();
+}
 
