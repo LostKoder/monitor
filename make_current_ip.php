@@ -5,4 +5,4 @@ $response = $client->request('GET', 'https://api.ipify.org/?format=json', [
   'proxy' => 'socks5://127.0.0.1:9050',
 ]);
 
-echo json_decode($response->getBody()->getContents())->ip;
+file_put_contents(__DIR__.'/IP.txt',json_decode($response->getBody()->getContents())->ip);

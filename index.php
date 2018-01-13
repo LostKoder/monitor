@@ -9,6 +9,7 @@ require_once __DIR__.'/vendor/autoload.php';
 
 $logger = new Logger('main');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__.'/monitor.log'));
+$ip = file_get_contents(__DIR__.'/IP.txt');
 $cookie = new CookieJar();
 $client = new Client([
   'headers' => [
@@ -31,15 +32,15 @@ $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 // make request to the amazon
 $url = 'https://www.amazon.com'.$uri;
 try {
-    $logger->debug("Requesting $url by TOR");
+    $logger->debug("Requesting $url by TOR",['ip' => $ip]);
     $start = microtime(true);
     $response = $client->request($method, $url, [
       'proxy' => 'socks5://127.0.0.1:9050',
       'connect_timeout' => 5,
     ]);
-    $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start));
+    $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start),['ip' => $ip]);
 } catch (RequestException $e) {
-    $logger->debug("TOR request timeout ",['message' => $e->getMessage()]);
+    $logger->debug("TOR request timeout ",['message' => $e->getMessage(), 'ip' => $ip]);
     throw $e;
 }
 
