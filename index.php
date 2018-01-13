@@ -3,9 +3,12 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\RequestException;
+use Monolog\Logger;
 
 require_once __DIR__.'/vendor/autoload.php';
 
+$logger = new Logger('main');
+$logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__.'/monitor.log'));
 $cookie = new CookieJar();
 $client = new Client([
   'headers' => [
@@ -28,12 +31,19 @@ $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 // make request to the amazon
 $url = 'https://www.amazon.com/'.$uri;
 try {
+    $logger->debug("Requesting $url by TOR");
+    $start = microtime(true);
     $response = $client->request($method, $url, [
       'proxy' => 'socks5://127.0.0.1:9050',
       'timeout' => 4,
     ]);
+    $logger->debug(sprintf("Request completed with TOR in '%s' seconds", microtime(true) - $start));
 } catch (RequestException $e) {
+    $logger->debug("TOR request timeout ");
+    $logger->debug("Requesting $url without proxy");
+    $start = microtime(true);
     $response = $client->request($method, $url);
+    $logger->debug(sprintf("Request completed without proxy in '%s' seconds", microtime(true) - $start));
 }
 
 $isXmlHttpRequest = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
