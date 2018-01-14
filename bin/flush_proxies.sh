@@ -6,5 +6,6 @@ for file in ${files}
 do
     /bin/kill -9 $(/bin/ps aux | /bin/grep ${file} | /bin/grep -v grep | /bin/sed -r 's/ +/\t/g' | /usr/bin/cut -f2)
     /usr/sbin/tor -f ${file} &
+    /bin/sleep 10
     /usr/bin/mysql --database monitor -e"update tor_proxies set enabled = 1 where config_file='${file}'"
 done
