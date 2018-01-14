@@ -10,6 +10,7 @@ namespace Core\Proxy;
 
 
 use Carbon\Carbon;
+use Core\Factory\LoggerFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -26,6 +27,9 @@ class ClientProxy extends Client
                 $proxy->save();
                 return $response;
             } catch (RequestException $e) {
+                $this->logger()->debug('Proxy connection failed',[
+                    'exception' => $e,
+                ]);
                 $this->proxyFailureHandler()->handle($proxy);
                 continue;
             }
@@ -52,5 +56,12 @@ class ClientProxy extends Client
     private function proxyFailureHandler()
     {
         return new ProxyFailureHandler();
+    }
+
+    /**
+     * @return \Psr\Log\LoggerInterface
+     */
+    private function logger(){
+        return LoggerFactory::create();
     }
 }

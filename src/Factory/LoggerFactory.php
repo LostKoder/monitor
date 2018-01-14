@@ -34,8 +34,10 @@ class LoggerFactory
      */
     private static function createInstance()
     {
+        $streamHandler = new StreamHandler(__DIR__ . '/../../var/app.log');
+        $streamHandler->setLevel(Logger::DEBUG);
         $logger = new Logger('app',[
-          new StreamHandler(__DIR__.'/../../var/app.log'),
+            $streamHandler,
         ]);
 
         return $logger;
