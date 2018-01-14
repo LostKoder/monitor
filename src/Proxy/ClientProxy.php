@@ -9,6 +9,7 @@
 namespace Core\Proxy;
 
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -20,7 +21,10 @@ class ClientProxy extends Client
         foreach ($this->proxies() as $proxy) {
             $options = array_merge($options,['proxy' => $proxy->address]);
             try {
-                return parent::request($method, $uri, $options);
+                $response = parent::request($method, $uri, $options);
+                $proxy->used_at = Carbon::now();
+                $proxy->save();
+                return $response;
             } catch (RequestException $e) {
                 $this->proxyFailureHandler()->handle($proxy);
                 continue;
@@ -34,7 +38,10 @@ class ClientProxy extends Client
     private function proxies(){
 
         /** @var TorProxy[] $proxies */
-        $proxies = TorProxy::query()->where('enabled', true)->get();
+        $proxies = TorProxy::query()
+            ->orderBy('used_at','asc')
+            ->where('enabled', true)
+            ->get();
 
         return $proxies;
     }

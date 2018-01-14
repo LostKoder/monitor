@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-files=$(mysql --database monitor -e' select config_file from tor_proxies;'  | tail -n 6)
+files=$(mysql --database monitor -e' select config_file from tor_proxies where enabled = 0;'  | tail -n +2)
 
 for file in ${files}
 do
