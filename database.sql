@@ -39,11 +39,11 @@ CREATE TABLE `tor_proxies` (
 LOCK TABLES `tor_proxies` WRITE;
 /*!40000 ALTER TABLE `tor_proxies` DISABLE KEYS */;
 INSERT INTO `tor_proxies` VALUES (1,'socks5://127.0.0.1:9061','/etc/tor/torrc.1',1,'1970-01-01 00:00:00');
-INSERT INTO `tor_proxies` VALUES (1,'socks5://127.0.0.1:9062','/etc/tor/torrc.2',1,'1970-01-01 00:00:00');
-INSERT INTO `tor_proxies` VALUES (1,'socks5://127.0.0.1:9063','/etc/tor/torrc.3',1,'1970-01-01 00:00:00');
-INSERT INTO `tor_proxies` VALUES (1,'socks5://127.0.0.1:9064','/etc/tor/torrc.4',1,'1970-01-01 00:00:00');
-INSERT INTO `tor_proxies` VALUES (1,'socks5://127.0.0.1:9065','/etc/tor/torrc.5',1,'1970-01-01 00:00:00');
-INSERT INTO `tor_proxies` VALUES (1,'socks5://127.0.0.1:9066','/etc/tor/torrc.6',1,'1970-01-01 00:00:00');
+INSERT INTO `tor_proxies` VALUES (2,'socks5://127.0.0.1:9062','/etc/tor/torrc.2',1,'1970-01-01 00:00:00');
+INSERT INTO `tor_proxies` VALUES (3,'socks5://127.0.0.1:9063','/etc/tor/torrc.3',1,'1970-01-01 00:00:00');
+INSERT INTO `tor_proxies` VALUES (4,'socks5://127.0.0.1:9064','/etc/tor/torrc.4',1,'1970-01-01 00:00:00');
+INSERT INTO `tor_proxies` VALUES (5,'socks5://127.0.0.1:9065','/etc/tor/torrc.5',1,'1970-01-01 00:00:00');
+INSERT INTO `tor_proxies` VALUES (6,'socks5://127.0.0.1:9066','/etc/tor/torrc.6',1,'1970-01-01 00:00:00');
 /*!40000 ALTER TABLE `tor_proxies` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
