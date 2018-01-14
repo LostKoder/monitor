@@ -43,7 +43,7 @@ class Kernel
         $response = $this->client->request($method, $url);
 
         $headers = [
-          'access-control-allow-origin' => 'https://malltina.com',
+          'access-control-allow-origin' => '*',
           'cf-ray' => '3db09a8eed929be7-AMS',
           'vary' => 'Accept-Encoding',
         ];
