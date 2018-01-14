@@ -5,16 +5,16 @@ require_once __DIR__.'/vendor/autoload.php';
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
-(new \Symfony\Component\Dotenv\Dotenv())->load(__DIR__.'/.env');
+//(new \Symfony\Component\Dotenv\Dotenv())->load(__DIR__.'/.env');
 
 $capsule = new Capsule;
 
 $capsule->addConnection([
   'driver'    => 'mysql',
   'host'      => 'localhost',
-  'database'  => getenv("DB_DATABASE"),
-  'username'  => getenv("DB_USERNAME"),
-  'password'  => getenv("DB_PASSWORD"),
+  'database'  => 'monitor',
+  'username'  => 'root',
+  'password'  => 'root',
   'charset'   => 'utf8',
   'collation' => 'utf8_unicode_ci',
   'prefix'    => '',
