@@ -50,10 +50,10 @@ class Kernel
 
         $contents = $response->getBody()->getContents();
 
-        if ($request->isXmlHttpRequest()) {
+//        if ($request->isXmlHttpRequest()) {
             return new JsonResponse(['response' => $contents], 200, $headers);
-        }
+//        }
 
-        return new Response($contents, 200, $headers);
+//        return new Response($contents, 200, $headers);
     }
 }
