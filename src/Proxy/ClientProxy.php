@@ -22,11 +22,11 @@ class ClientProxy extends Client
         foreach ($this->proxies() as $proxy) {
             $options = array_merge($options,['proxy' => $proxy->address]);
             try {
+                $proxy->used_at = Carbon::now();
+                $proxy->save();
                 $start = microtime(true);
                 $response = parent::request($method, $uri, $options);
-                $proxy->used_at = Carbon::now();
                 $this->logger()->debug('Proxy connection succeed',['duration' => microtime(true) - $start]);
-                $proxy->save();
                 return $response;
             } catch (RequestException $e) {
                 $this->logger()->debug('Proxy connection failed',[
