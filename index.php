@@ -4,7 +4,7 @@
 use Core\Factory\ClientFactory;
 use Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
-phpinfo();
+
 require_once __DIR__.'/bootstrap.php';
 
 $request = Request::createFromGlobals();
