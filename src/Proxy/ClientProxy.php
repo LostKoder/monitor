@@ -24,6 +24,7 @@ class ClientProxy extends Client
             try {
                 $response = parent::request($method, $uri, $options);
                 $proxy->used_at = Carbon::now();
+                $this->logger()->debug('Proxy connection succeed');
                 $proxy->save();
                 return $response;
             } catch (RequestException $e) {
