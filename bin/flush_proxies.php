@@ -10,7 +10,7 @@ $proxies = TorProxy::query()->where('enabled',false)->get();
 foreach ($proxies as $proxy) {
 
     // kill existing process
-    $process = new Process("kill -9 $(ps aux | grep '.$proxy->config_file.' | grep -v grep | sed -r 's/ +/\t/g' | cut -f2)");
+    $process = new Process('kill -9 $(ps aux | grep '.$proxy->config_file.' | grep -v grep | sed -r \'s/ +/\t/g\' | cut -f2)');
     $process->run();
     echo $process->getOutput();
     echo $process->getErrorOutput();
