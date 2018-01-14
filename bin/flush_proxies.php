@@ -10,8 +10,10 @@ $proxies = TorProxy::query()->where('enabled',false)->get();
 foreach ($proxies as $proxy) {
 
     // kill existing process
-    $process = new Process('kill -9 $(ps aux | grep '.$proxy->config_file.' | grep -v grep | sed -r \'s/ +/\t/g\' | cut -f2)');
+    $process = new Process("kill -9 $(ps aux | grep '.$proxy->config_file.' | grep -v grep | sed -r 's/ +/\t/g' | cut -f2)");
     $process->run();
+    echo $process->getOutput();
+    echo $process->getErrorOutput();
 
     // run process again
     $pid = new \Core\Process\DetachedProcess(sprintf('tor -f %s  & > /dev/null', $proxy->config_file));
@@ -19,7 +21,7 @@ foreach ($proxies as $proxy) {
     $pid->run();
 
     // wait 5 seconds to process start ups
-    sleep(5);
+    sleep(20);
 
     // set proxy as enabled and services can use it
     $proxy->enabled = true;
