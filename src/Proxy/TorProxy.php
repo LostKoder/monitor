@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string config_file
  * @property boolean enabled
  * @property \DateTimeInterface used_at
+ * @property \DateTimeInterface disabled_at
  */
 class TorProxy extends Model
 {
@@ -32,6 +33,7 @@ class TorProxy extends Model
       'address' => 'string',
       'config_file' => 'string',
       'used_at' => 'datetime',
+      'disabled_at' => 'datetime',
     ];
 
     protected $attributes = [

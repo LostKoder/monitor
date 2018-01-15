@@ -1,6 +1,6 @@
 #!/bin/bash
 
-files=$(/usr/bin/mysql --database monitor -e' select config_file from tor_proxies where enabled = 0;'  | /usr/bin/tail -n +2)
+files=$(/usr/bin/mysql --database monitor -e' select config_file from tor_proxies where enabled = 0 and TIMESTAMPDIFF(MINUTE,disabled_at,NOW()) >= 1;' | /usr/bin/tail -n +2)
 
 for file in ${files}
 do
