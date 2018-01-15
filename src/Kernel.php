@@ -49,7 +49,6 @@ class Kernel
 
         $response = $this->client->request($method, $url);
 
-
         $headers = [
           'access-control-allow-origin' => $origin,
           'cf-ray' => '3db09a8eed929be7-AMS',
@@ -59,6 +58,5 @@ class Kernel
         $contents = $response->getBody()->getContents();
 
         return new JsonResponse(['response' => $contents], 200, $headers);
-
     }
 }
