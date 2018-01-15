@@ -30,7 +30,8 @@ class ClientProxy extends Client
                 return $response;
             } catch (RequestException $e) {
                 $this->logger()->debug('Proxy connection failed',[
-                    'exception' => $e,
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
                 ]);
 
                 // if error was not 404 or 503 mark proxy as failed
