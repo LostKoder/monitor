@@ -36,7 +36,7 @@ class Kernel
     public function handle(Request $request)
     {
         // return bullshit if request is not authorized
-        if(!($request->isXmlHttpRequest() || $request->query->has('imboss'))){
+        if($request->isXmlHttpRequest()){
             return new Response(sha1(time()));
         }
 
