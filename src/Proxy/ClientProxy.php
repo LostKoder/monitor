@@ -32,7 +32,12 @@ class ClientProxy extends Client
                 $this->logger()->debug('Proxy connection failed',[
                     'exception' => $e,
                 ]);
-                $this->proxyFailureHandler()->handle($proxy);
+
+                // if error was not 404 or 503 mark proxy as failed
+                if (!preg_match('/code: (404|503)/', $e->getMessage())) {
+                    $this->proxyFailureHandler()->handle($proxy);
+                }
+
                 continue;
             }
         }
