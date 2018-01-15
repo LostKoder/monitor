@@ -36,7 +36,7 @@ class LoggerFactory
     private static function createInstance()
     {
         global $capsule;
-        $streamHandler = new MySQLHandler($capsule->getConnection()->getPdo(),'logs');
+        $streamHandler = new MySQLHandler($capsule->getConnection()->getPdo(),'logs',['code','exception']);
         $streamHandler->setLevel(Logger::DEBUG);
         $logger = new Logger('app',[
             $streamHandler,
