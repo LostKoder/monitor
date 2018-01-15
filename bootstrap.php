@@ -25,3 +25,9 @@ $capsule->setAsGlobal();
 
 // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
 $capsule->bootEloquent();
+
+set_exception_handler(function($e){
+    header('content-type:application/json');
+    echo json_encode(['message' => $e->getMessage()]);
+    die();
+});

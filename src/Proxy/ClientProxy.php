@@ -34,10 +34,11 @@ class ClientProxy extends Client
                 ]);
 
                 // if error was not 404 or 503 mark proxy as failed
-                if (!preg_match('/code: (404|503)/', $e->getMessage())) {
-                    $this->proxyFailureHandler()->handle($proxy);
+                if (preg_match('/code: (404|503)/', $e->getMessage())) {
+                    throw $e;
                 }
 
+                $this->proxyFailureHandler()->handle($proxy);
                 continue;
             }
         }
