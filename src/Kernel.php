@@ -35,8 +35,7 @@ class Kernel
      */
     public function handle(Request $request)
     {
-        $origin = $request->headers->get('HTTP_ORIGIN');
-        dd($origin);
+        $origin = $request->server->get('HTTP_ORIGIN');
         // return bullshit if it was not from rc or main server
         if (!in_array($origin,['https://malltina.com', 'https://rc1.malltina.com'])) {
             return new Response(sha1(time()));
