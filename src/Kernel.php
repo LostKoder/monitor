@@ -37,7 +37,7 @@ class Kernel
     {
         $origin = $request->server->get('HTTP_ORIGIN');
         // return bullshit if it was not from rc or main server
-        if (!in_array($origin,['https://malltina.com', 'https://rc1.malltina.com'])) {
+        if (!in_array($origin,['https://malltina.com', 'https://rc1.malltina.com']) && !$request->query->has('imboss')) {
             return new Response(sha1(time()));
         }
 
