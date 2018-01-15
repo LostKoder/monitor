@@ -35,7 +35,7 @@ class ClientProxy extends Client
                 }
 
                 $this->logger()->debug('Proxy connection failed',[
-                    'message' => $e->getMessage(),
+                    'exception' => $e->getMessage(),
                     'code' => $e->getCode()
                 ]);
 
