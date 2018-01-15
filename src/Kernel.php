@@ -35,13 +35,9 @@ class Kernel
      */
     public function handle(Request $request)
     {
-        // return bullshit if request is not authorized
-        if($request->isXmlHttpRequest()){
-            return new Response(sha1(time()));
-        }
-
         // prepare parameters
         $method = $request->getMethod();
+
         // make request to the amazon
         $url = 'https://www.amazon.com'.$request->getRequestUri();
 
@@ -55,13 +51,7 @@ class Kernel
 
         $contents = $response->getBody()->getContents();
 
-        if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(['response' => $contents], 200, $headers);
-        }
-
-        if ($request->query->has('imboss')) {
-            return new Response($contents, 200, $headers);
-        }
+        return new JsonResponse(['response' => $contents], 200, $headers);
 
     }
 }
