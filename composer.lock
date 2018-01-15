@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6a25a7872c295c8d848610b268be2ab",
+    "content-hash": "42ed1c45efdd345ffc3ec4d5d6be9715",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1068,6 +1068,50 @@
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
             "time": "2018-01-03T07:37:34+00:00"
+        },
+        {
+            "name": "wazaari/monolog-mysql",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/waza-ari/monolog-mysql.git",
+                "reference": "fb9e6748e4954dfa8d72794bdd697f6731f77b33"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/waza-ari/monolog-mysql/zipball/fb9e6748e4954dfa8d72794bdd697f6731f77b33",
+                "reference": "fb9e6748e4954dfa8d72794bdd697f6731f77b33",
+                "shasum": ""
+            },
+            "require": {
+                "monolog/monolog": ">1.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MySQLHandler\\": "src/MySQLHandler"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Herrmann",
+                    "email": "daniel.herrmann1@gmail.com"
+                }
+            ],
+            "description": "A handler for Monolog that sends messages to MySQL",
+            "homepage": "https://github.com/waza-ari/monolog-mysql",
+            "keywords": [
+                "database",
+                "log",
+                "logging",
+                "monolog",
+                "mysql"
+            ],
+            "time": "2017-02-13T17:23:18+00:00"
         }
     ],
     "packages-dev": [],

@@ -11,6 +11,7 @@ namespace Core\Factory;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use MySQLHandler\MySQLHandler;
 
 class LoggerFactory
 {
@@ -34,7 +35,8 @@ class LoggerFactory
      */
     private static function createInstance()
     {
-        $streamHandler = new StreamHandler(__DIR__ . '/../../var/app.log');
+        global $capsule;
+        $streamHandler = new MySQLHandler($capsule->getConnection()->getPdo(),'logs');
         $streamHandler->setLevel(Logger::DEBUG);
         $logger = new Logger('app',[
             $streamHandler,
