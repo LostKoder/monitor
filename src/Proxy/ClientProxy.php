@@ -29,15 +29,16 @@ class ClientProxy extends Client
                 $this->logger()->debug('Proxy connection succeed',['duration' => microtime(true) - $start]);
                 return $response;
             } catch (RequestException $e) {
+                // if error was not 404 or 503 mark proxy as failed
+                if (in_array($e->getCode(), [404, 503, 200])) {
+                    throw $e;
+                }
+
                 $this->logger()->debug('Proxy connection failed',[
                     'message' => $e->getMessage(),
                     'code' => $e->getCode()
                 ]);
 
-                // if error was not 404 or 503 mark proxy as failed
-                if (in_array($e->getCode(), [404, 503, 200])) {
-                    throw $e;
-                }
 
                 $this->proxyFailureHandler()->handle($proxy);
                 continue;
