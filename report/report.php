@@ -38,7 +38,7 @@ SQL;
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $duration = $stmt->fetchAll()[0][0];
-    $percent = ($failed * 100) / ($failed + $success);
+    $percent = ($success * 100) / ($success + $failed);
 
     echo sprintf("%s, %d, %d, %.2f, %.2f%%\n",$label, $success, $failed, $duration, $percent);
 }
