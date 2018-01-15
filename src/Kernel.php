@@ -35,6 +35,12 @@ class Kernel
      */
     public function handle(Request $request)
     {
+        $origin = $request->headers->get('HTTP_ORIGIN');
+        // return bullshit if it was not from rc or main server
+        if (!in_array($origin,['https://malltina.com', 'https://rc1.malltina.com'])) {
+            return new Response(sha1(time()));
+        }
+
         // prepare parameters
         $method = $request->getMethod();
 
@@ -43,8 +49,9 @@ class Kernel
 
         $response = $this->client->request($method, $url);
 
+
         $headers = [
-          'access-control-allow-origin' => 'https://malltina.com',
+          'access-control-allow-origin' => $origin,
           'cf-ray' => '3db09a8eed929be7-AMS',
           'vary' => 'Accept-Encoding',
         ];
