@@ -18,7 +18,6 @@ class ClientProxy extends Client
 {
     public function request($method, $uri = '', array $options = [])
     {
-        $options['connect_timeout'] = 5;
         foreach ($this->proxies() as $proxy) {
             $options = array_merge($options,['proxy' => $proxy->address]);
             try {

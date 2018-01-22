@@ -56,7 +56,7 @@ class Kernel
         ];
 
         $contents = $response->getBody()->getContents();
-
+        $contents = utf8_encode($contents);
         return new JsonResponse(['response' => $contents], 200, $headers);
     }
 }
