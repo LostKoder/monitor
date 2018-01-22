@@ -16,7 +16,7 @@ class ClientProxy extends Client
 {
     public function request($method, $uri = '', array $options = [])
     {
-            $options = array_merge($options,['proxy' => 'socks5://127.0.0.1:9050']);
+//            $options = array_merge($options,['proxy' => 'socks5://127.0.0.1:9050']);
             $start = microtime(true);
             $response = parent::request($method, $uri, $options);
             $this->logger()->debug('Proxy connection succeed',['duration' => microtime(true) - $start]);
