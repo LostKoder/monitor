@@ -57,6 +57,11 @@ class Kernel
 
         $contents = $response->getBody()->getContents();
         $contents = utf8_encode($contents);
-        return new JsonResponse(['response' => $contents], 200, $headers);
+        $jsonResponse = new JsonResponse(['response' => $contents], 200, $headers);
+        $jsonResponse->setCache([
+            'max_age' => 259200, // 30 days in seconds
+            'public' => true,
+        ]);
+        return $jsonResponse;
     }
 }
