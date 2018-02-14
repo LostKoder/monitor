@@ -11,66 +11,50 @@ namespace Core\Proxy;
 
 use Carbon\Carbon;
 use Core\Factory\LoggerFactory;
+use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\VoidCache;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 class ClientProxy extends Client
 {
+    private $cache;
+
+    public function __construct(array $config = [], Cache $cache = null)
+    {
+        parent::__construct($config);
+        $this->cache = $cache;
+        if ($cache === null) {
+            $this->cache = new VoidCache();
+        }
+    }
+
     public function request($method, $uri = '', array $options = [])
     {
-        foreach ($this->proxies() as $proxy) {
-            $options = array_merge($options,['proxy' => $proxy->address]);
+        if ($this->cache->contains($uri)) {
+            return $this->cache->fetch($uri);
+        }
             try {
-                $proxy->used_at = Carbon::now();
-                $proxy->save();
-                $start = microtime(true);
                 $response = parent::request($method, $uri, $options);
-                $this->logger()->debug('Proxy connection succeed',['duration' => microtime(true) - $start]);
+                $this->cache->save($uri, $response);
                 return $response;
             } catch (RequestException $e) {
                 // if error was not 404 or 503 mark proxy as failed
                 if (in_array($e->getCode(), [404, 503, 200])) {
                     throw $e;
                 }
-
-                $this->logger()->debug('Proxy connection failed',[
+                $this->logger()->debug('Proxy connection failed', [
                     'exception' => $e->getMessage(),
                     'code' => $e->getCode()
                 ]);
-
-
-                $this->proxyFailureHandler()->handle($proxy);
-                continue;
-            }
         }
-    }
-
-    /**
-     * @return TorProxy[]
-     */
-    private function proxies(){
-
-        /** @var TorProxy[] $proxies */
-        $proxies = TorProxy::query()
-            ->orderBy('used_at','asc')
-            ->where('enabled', true)
-            ->get();
-
-        return $proxies;
-    }
-
-    /**
-     * @return ProxyFailureHandler
-     */
-    private function proxyFailureHandler()
-    {
-        return new ProxyFailureHandler();
     }
 
     /**
      * @return \Psr\Log\LoggerInterface
      */
-    private function logger(){
+    private function logger()
+    {
         return LoggerFactory::create();
     }
 }
