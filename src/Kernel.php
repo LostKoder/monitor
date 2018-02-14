@@ -37,7 +37,7 @@ class Kernel
     {
         $origin = $request->server->get('HTTP_ORIGIN');
         // return bullshit if it was not from rc or main server
-        if (!in_array($origin,['https://malltina.com', 'https://rc1.malltina.com', 'http://malltina.net']) && !$request->query->has('imboss')) {
+        if (!in_array($origin,['http://localhost:9999', 'https://malltina.com', 'https://rc1.malltina.com', 'http://malltina.net']) && !$request->query->has('imboss')) {
             return new Response(sha1(time()));
         }
 
@@ -45,19 +45,17 @@ class Kernel
         $method = $request->getMethod();
 
         // make request to the amazon
-        $url = 'https://www.amazon.com'.$request->getRequestUri();
+        $url = $request->getRequestUri();
 
-        $response = $this->client->request($method, $url);
-
+        $contents = $this->client->request($method, $url);
         $headers = [
           'access-control-allow-origin' => $origin,
           'cf-ray' => '3db09a8eed929be7-AMS',
           'vary' => 'Accept-Encoding',
+          'content-type' => 'application/json'
         ];
 
-        $contents = $response->getBody()->getContents();
-        $contents = utf8_encode($contents);
-        $jsonResponse = new JsonResponse(['response' => $contents], 200, $headers);
+        $jsonResponse = new Response($contents, 200, $headers);
         $jsonResponse->setCache([
             'max_age' => 259200, // 30 days in seconds
             'public' => true,

@@ -8,8 +8,6 @@
 
 namespace Core\Proxy;
 
-
-use Carbon\Carbon;
 use Core\Factory\LoggerFactory;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\VoidCache;
@@ -31,22 +29,35 @@ class ClientProxy extends Client
 
     public function request($method, $uri = '', array $options = [])
     {
-        if ($this->cache->contains($uri)) {
-            return $this->cache->fetch($uri);
+        $cacheKey = sha1($uri);
+        global $request;
+        if ($this->cache->contains($cacheKey) && !$request->isNoCache()) {
+            return $this->cache->fetch($cacheKey);
         }
-            try {
-                $response = parent::request($method, $uri, $options);
-                $this->cache->save($uri, $response);
-                return $response;
-            } catch (RequestException $e) {
-                // if error was not 404 or 503 mark proxy as failed
-                if (in_array($e->getCode(), [404, 503, 200])) {
-                    throw $e;
-                }
-                $this->logger()->debug('Proxy connection failed', [
-                    'exception' => $e->getMessage(),
-                    'code' => $e->getCode()
-                ]);
+        $exception = null;
+        foreach ($this->servers() as $server) {
+                $uri = $server . '/' . $uri;
+            if (preg_match('/\?/', $uri)) {
+                $uri .= '&imboss';
+            } else {
+                $uri .= '?imboss';
+            }
+            $response = parent::request($method, $uri, $options);
+            $contents = $response->getBody()->getContents();
+            if (!preg_match('/\{"response":"/', $contents)) {
+                $exception = new \Exception("Response not successful");
+                continue;
+            }
+            $this->cache->save($cacheKey, $contents);
+            return $contents;
+        }
+
+        if ($exception) {
+            $this->logger()->debug('Fetch failed', [
+                'exception' => $exception->getMessage(),
+                'code' => $exception->getCode()
+            ]);
+            throw $exception;
         }
     }
 
@@ -56,5 +67,13 @@ class ClientProxy extends Client
     private function logger()
     {
         return LoggerFactory::create();
+    }
+
+    private function servers()
+    {
+        return [
+            'https://apit1.malltina.com',
+            'https://apit2.malltina.com',
+        ];
     }
 }

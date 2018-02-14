@@ -10,6 +10,7 @@ namespace Core\Factory;
 
 
 use Core\Proxy\ClientProxy;
+use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Cookie\CookieJar;
 
 class ClientFactory
@@ -31,6 +32,6 @@ class ClientFactory
           ],
           'connect_timeout' => 5,
           'cookies' => $cookie,
-        ]);
+        ], new FilesystemCache(__DIR__.'/../../var'));
     }
 }
